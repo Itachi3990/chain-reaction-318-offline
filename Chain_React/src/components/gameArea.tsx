@@ -316,6 +316,18 @@ useEffect(() => {
 }
 , [gameModeIndex]);
 
+const gridColsClass = {
+  4: "grid-cols-4",
+  5: "grid-cols-5",
+  6: "grid-cols-6",
+  7: "grid-cols-7",
+  8: "grid-cols-8",
+  9: "grid-cols-9",
+  10: "grid-cols-10",
+  11: "grid-cols-11",
+  12: "grid-cols-12",
+}[numCols] || "grid-cols-8";
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
       <div className="flex-1 w-full">
@@ -442,7 +454,7 @@ useEffect(() => {
         </div>
       </div>
       <div className={`flex-6 ${getWidth()}`} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '20px' }}>
-        <div className={`grid grid-cols-${numCols} gap-1 w-full max-w-screen-md mx-auto`} style={{overflowY: 'auto', maxHeight: '70vh'}}>
+        <div className={`grid ${gridColsClass} gap-1 w-full max-w-screen-md mx-auto`} style={{overflowY: 'auto', maxHeight: '70vh'}}>
             {squares.map((_, index) => (
                 <div
                 key={index}
