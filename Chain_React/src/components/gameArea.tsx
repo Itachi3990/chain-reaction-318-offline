@@ -14,19 +14,17 @@ import red3_s from './assets/3R_s.gif'
 
 import boom from './assets/boom.png'
 
-function getCurrentTimeInSeconds(): number {
-    const now = new Date();
-    const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    return Math.floor((now.getTime() - startOfDay.getTime()) / 1000);
-}
+import AiMove from "./aiMovePlugin";
+
 
 function GameArea({ gameStateHistory, setGameStateHistory } : { gameStateHistory: string[][][], setGameStateHistory: (history: string[][][]) => void }) {
+
   const gameMode = ["Player vs AI", "AI vs AI"]
   const aiHeuristics = ["Tile Count", "Orb Count", "Boundary Control", "Stack Control", "Orb Boundary Mix", "Random Move" ]
 
   const [gameModeIndex, setGameModeIndex] = useState(0); // Default to Player vs AI mode
 
-  const [numRows, setNumRows] = useState(4);
+  const [numRows, setNumRows] = useState(5);
   const [numCols, setNumCols] = useState(8);
   const [squares, setSquares] = useState(Array.from({ length: numRows * numCols }));
 
@@ -47,7 +45,12 @@ function GameArea({ gameStateHistory, setGameStateHistory } : { gameStateHistory
     const totalSquares = numRows * numCols;
     setSquares(Array.from({ length: totalSquares }));
     setGameState(Array.from({ length: numRows }, () => Array.from({ length: numCols }, () =>'0')));
-  }, [numRows, numCols]);
+        // Reset game history when dimensions change to prevent mismatched states
+    setGameStateHistory([]);
+    // Stop any ongoing AI operations
+    setIsAIThinking(false);
+    setIsAIAutoMode(false);
+ }, [numRows, numCols]);
 
   const handleRowChange = (event : any) => {
     setNumRows(event.target.value);
@@ -209,33 +212,32 @@ function GameArea({ gameStateHistory, setGameStateHistory } : { gameStateHistory
             setIsAIThinking(false); 
             return; // AI only plays in AI vs AI mode or when it's player B's turn
         }
-        try {
-            const response = await fetch('http://localhost:4000/run-ai', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                gameState: gameState,
-                aiDepth: aiDepth,
-                aiHeuristic: gameStateHistory.length % 2 ? aiHeuristics[aiHeuristicIndexB] : aiHeuristics[aiHeuristicIndexA], 
-                moveFor: gameStateHistory.length % 2 ? "B" : "R", // AI plays with blue orbs if it's player B's turn
-            }),
-            });
-            if (!response.ok) {
-                console.error('Failed to fetch AI move', response);
-                return;
-            }
 
-            setIsAIThinking(false); 
-            const data = await response.json();
-            //console.log('AI move data:', data);
-            const moveFor = gameStateHistory.length % 2 ? "B" : "R"; // AI plays with blue orbs if it's player B's turn
-            onCellClick(data.move, moveFor); // AI plays with blue orbs
-        } catch (error) {
-            alert('Error fetching AI move: ' + error);
-        }
+
+         //need to flatten the gameState to a string
+        const gameStateStr = gameState.map(row => row.join(',')).join(',');
+
+        const toformatHeuristic = gameStateHistory.length % 2 ? aiHeuristics[aiHeuristicIndexB] : aiHeuristics[aiHeuristicIndexA];
+
         
+        const { aiMove } = await AiMove.makeMove({
+            stateStr: gameStateStr,
+            rows: numRows,
+            depth: aiDepth,
+            heuristic: toformatHeuristic.toLowerCase().replace(' ', '_').replace(' ', '_'),
+            playingFor: gameStateHistory.length % 2 ? "B" : "R",
+        });
+
+        setIsAIThinking(false); 
+
+        if( aiMove < 0 || aiMove >= numRows * numCols ) {
+            alert("Invalid AI move: " + aiMove);
+            return; // Invalid move, do not update the game state
+        }
+
+        const moveFor = gameStateHistory.length % 2 ? "B" : "R"; // AI plays with blue orbs if it's player B's turn
+        onCellClick(aiMove, moveFor); // AI plays with blue orbs
+
     }
 
 
