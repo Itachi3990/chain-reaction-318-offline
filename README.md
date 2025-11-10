@@ -12,4 +12,6 @@ A node js app was used between the react frontend and the c++ backend.
 ## Android Port
 There is also a simplified android port, where the c++ backend was converted to java, and the react js frontend was wrapped in capacitor. This app is very simplified compared to the web app. 
 
-<video src="https://www.youtube.com/watch?v=4t3B_xcU6_I" width="600" controls></video>
+[<video src="https://www.youtube.com/watch?v=4t3B_xcU6_I" width="600" controls></video>](https://www.youtube.com/watch?v=4t3B_xcU6_I)
+
+https://www.youtube.com/watch?v=4t3B_xcU6_I
