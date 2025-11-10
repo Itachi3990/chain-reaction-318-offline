@@ -1,3 +1,7 @@
+/**
+ * READ THE COMMENT AT THE END OF THE FILE
+ */
+
 import { useState, useEffect } from "react";
 
 import blue1 from './assets/1B.png'
@@ -19,46 +23,46 @@ import AiMove from "./aiMovePlugin";
 
 function GameArea({ gameStateHistory, setGameStateHistory } : { gameStateHistory: string[][][], setGameStateHistory: (history: string[][][]) => void }) {
 
-  const gameMode = ["Player vs AI", "AI vs AI"]
+  //const gameMode = ["Player vs AI", "AI vs AI"]
   const aiHeuristics = ["Tile Count", "Orb Count", "Boundary Control", "Stack Control", "Orb Boundary Mix", "Random Move" ]
 
-  const [gameModeIndex, setGameModeIndex] = useState(0); // Default to Player vs AI mode
+  const [gameModeIndex, _] = useState(0); // Default to Player vs AI mode
 
-  const [numRows, setNumRows] = useState(5);
-  const [numCols, setNumCols] = useState(8);
-  const [squares, setSquares] = useState(Array.from({ length: numRows * numCols }));
+  const [numRows, ___] = useState(5);
+  const [numCols, ____] = useState(9);
+  const [squares, _____] = useState(Array.from({ length: numRows * numCols }));
 
-  const [isAIautoMode, setIsAIAutoMode] = useState(false);
+  const [isAIautoMode, setIsAIAutoMode] = useState(true);
   const [isAIThinking, setIsAIThinking] = useState(false);
 
-  const rowLimit = Array.from({ length: 13 }, (_, i) => i + 3);
-  const colLimit = Array.from({ length: 8 }, (_, i) => i + 4);
+//   const rowLimit = Array.from({ length: 13 }, (_, i) => i + 3);
+//   const colLimit = Array.from({ length: 8 }, (_, i) => i + 4);
 
 
   const [gameState, setGameState] = useState(Array.from({ length: numRows }, () => Array.from({ length: numCols }, () => '0')));
 
-  const [aiDepth, setAIDepth] = useState(4); // Default AI depth
-  const [aiHeuristicIndexA, setAiHeuristicIndexA] = useState(0); // Default AI heuristic index
+  const [aiDepth, __] = useState(4); // Default AI depth
+  const [aiHeuristicIndexA, ______] = useState(0); // Default AI heuristic index
   const [aiHeuristicIndexB, setAiHeuristicIndexB] = useState(0); // Default AI heuristic index for player B
 
-  useEffect(() => {
-    const totalSquares = numRows * numCols;
-    setSquares(Array.from({ length: totalSquares }));
-    setGameState(Array.from({ length: numRows }, () => Array.from({ length: numCols }, () =>'0')));
-        // Reset game history when dimensions change to prevent mismatched states
-    setGameStateHistory([]);
-    // Stop any ongoing AI operations
-    setIsAIThinking(false);
-    setIsAIAutoMode(false);
- }, [numRows, numCols]);
+//   useEffect(() => {
+//     const totalSquares = numRows * numCols;
+//     setSquares(Array.from({ length: totalSquares }));
+//     setGameState(Array.from({ length: numRows }, () => Array.from({ length: numCols }, () =>'0')));
+//         // Reset game history when dimensions change to prevent mismatched states
+//     setGameStateHistory([]);
+//     // Stop any ongoing AI operations
+//     setIsAIThinking(false);
+//     setIsAIAutoMode(false);
+//  }, [numRows, numCols]);
 
-  const handleRowChange = (event : any) => {
-    setNumRows(event.target.value);
-  };
+//   const handleRowChange = (event : any) => {
+//     setNumRows(event.target.value);
+//   };
 
-  const handleColChange = (event : any) => {
-    setNumCols(event.target.value);
-  }
+//   const handleColChange = (event : any) => {
+//     setNumCols(event.target.value);
+//   }
 
   const onCellClick = (index: number, color : string) => {
     if( isAIThinking ) return;
@@ -90,13 +94,13 @@ function GameArea({ gameStateHistory, setGameStateHistory } : { gameStateHistory
     setGameState(newGameState); //this calls useEffect which checks for reactions and setsIntervalBetnTurns to false if no reactions occur
   }
 
-  const getWidth = () => {
-    if (numCols <= 5)
-        return 'w-1/3';
-    if (numCols == 6)
-        return 'w-1/2';
-    return 'w-full';
-  }
+//   const getWidth = () => {
+//     if (numCols <= 5)
+//         return 'w-1/3';
+//     if (numCols == 6)
+//         return 'w-1/2';
+//     return 'w-full';
+//   }
 
   const getOrbImage = (index : number) => {
 
@@ -308,7 +312,7 @@ function GameArea({ gameStateHistory, setGameStateHistory } : { gameStateHistory
 useEffect(() => {
     // Reset the game state when the game mode changes
     if (gameModeIndex === 0) {
-        setIsAIAutoMode(false);
+        //setIsAIAutoMode(false);
         setIsAIThinking(false);
     } else if(gameStateHistory.length > 0){
         setIsAIAutoMode(true);
@@ -333,9 +337,8 @@ const gridColsClass = {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
       <div className="flex-1 w-full">
-        <h1 className="text-4xl text-blue-200 font-bold mb-4 flex-1 text-center">Game Area</h1>
-        <div className="flex flex-row justify-center items-center gap-4 mb-4">
-            <div className="bg-transparent border-2 border-blue-300 rounded-lg p-4 text-lg text-blue-200 font-bold">
+        {/* <div className="flex flex-row justify-center items-center gap-4 mb-4">
+             <div className="bg-transparent border-2 border-blue-300 rounded-lg p-4 text-lg text-blue-200 font-bold">
                 <span>Rows:</span>
                 <select
                     value={numRows}
@@ -367,17 +370,10 @@ const gridColsClass = {
                     ))}
                 </select>
             </div>
-            <div>
-                <button
-                    className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                    onClick={() => resetGame()}
-                >
-                    Reset
-                </button>
-            </div>
-        </div>
-        <div className="flex flex-row justify-center items-center gap-4 mb-4">
-            <label className="flex items-center space-x-2 text-blue-200 font-bold">
+            
+        </div> */}
+        <div className="flex flex-row justify-center items-center gap-4">
+            {/* <label className="flex items-center space-x-2 text-blue-200 font-bold">
                 <input
                     type="checkbox"
                     className="form-checkbox h-5 w-5 text-blue-600"
@@ -400,8 +396,8 @@ const gridColsClass = {
                         ))}
                     </select>
                 </label>
-            </div>
-            {gameModeIndex === 1 &&
+            </div> */}
+            {/* {gameModeIndex === 1 &&
             <div>
                 <label className="bg-transparent border-2 border-blue-300 rounded-lg p-2 text-blue-200 font-bold">
                     <span>AI heuristic R:</span>
@@ -419,7 +415,17 @@ const gridColsClass = {
                     </select>
                 </label>
             </div>
-            }
+            } */}
+            <div className="px-4 py-2 bg-blue-500 text-white rounded-lg flex items-center gap-2 select-none" aria-disabled="true" role="status">
+                {isAIThinking ? (
+                    <>
+                        <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        <span>AI thinking</span>
+                    </>
+                ) : (
+                    <span>Your Turn!</span>
+                )}
+            </div>
             <div>
                 <label className="bg-transparent border-2 border-blue-300 rounded-lg p-2 text-blue-200 font-bold">
                     <span>AI heuristic {gameModeIndex===1 && 'B'}:</span>
@@ -427,7 +433,7 @@ const gridColsClass = {
                         className="rounded px-2 py-1 text-center"
                         value={aiHeuristicIndexB}
                         onChange={(e) => setAiHeuristicIndexB(parseInt(e.target.value))}
-                        disabled={isAIautoMode}
+                        disabled={isAIThinking}
                     >
                         {aiHeuristics.map((heuristic, index) => (
                             <option key={heuristic} value={index} className="text-black">
@@ -437,7 +443,7 @@ const gridColsClass = {
                     </select>
                 </label>
             </div>
-            <div>
+            {/* <div>
                 <button
                     disabled={ (gameModeIndex===0 && isAIautoMode) || isAIThinking}
                     className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center gap-2"
@@ -452,25 +458,47 @@ const gridColsClass = {
                         Thinking
                     </> : <>AI Turn</>}
                 </button>
+            </div> */}
+            <div>
+                <button
+                    className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                    onClick={() => resetGame(true)}
+                >
+                    Reset
+                </button>
             </div>
         </div>
       </div>
-      <div className={`flex-6 ${getWidth()}`} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '20px' }}>
-        <div className={`grid ${gridColsClass} gap-1 w-full max-w-screen-md mx-auto`} style={{overflowY: 'auto', maxHeight: '70vh'}}>
-            {squares.map((_, index) => (
-                <div
-                key={index}
-                className="bg-transparent border-2 border-blue-300 aspect-square rounded-lg flex items-center justify-center"
-                style={{ maxHeight: '100px'}}
-                onClick={() => {if(gameModeIndex===0) onCellClick(index, "R")}}
-                >
-                    {gameState.length && gameState[0].length && getOrbImage(index)}
-                </div>
-            ))}
+        <div className={`flex-9 `} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '0px', width: '66%' }}>
+            <div className={`grid ${gridColsClass} gap-1 w-full max-w-screen-md mx-auto`} style={{overflowY: 'auto', maxHeight: '70vh'}}>
+                {squares.map((_, index) => (
+                    <div
+                    key={index}
+                    className="bg-transparent border-2 border-blue-300 aspect-square rounded-lg flex items-center justify-center"
+                    style={{ maxHeight: '52px'}}
+                    onClick={() => {if(gameModeIndex===0) onCellClick(index, "R")}}
+                    >
+                        {gameState.length && gameState[0].length && getOrbImage(index)}
+                    </div>
+                ))}
+            </div>
         </div>
-    </div>
     </div>
   )
 }
 
 export default GameArea
+
+/* 
+this commit is for the final android port. the web version had the functionaity to 
+-> change the number of columns and rows of the game grid.
+    would reset the game on change
+-> manually make the ai play its turn by clicking a button
+-> set AI depth
+-> simulate AI vs AI games for data analysis, so choose heuristics for both AIs and let them play against each other
+
+All these functionalities have been removed for the android port to simplify the UI and UX.
+AI depth was removed because more than 4 made the app crash on android due to exponential increase in computation.
+
+thats why ur seeing so many commented out stuffs here
+*/
