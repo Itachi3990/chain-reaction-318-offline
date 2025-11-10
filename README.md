@@ -15,3 +15,6 @@ There is also a simplified android port, where the c++ backend was converted to 
 [<video src="https://www.youtube.com/watch?v=4t3B_xcU6_I" width="600" controls></video>](https://www.youtube.com/watch?v=4t3B_xcU6_I)
 
 https://www.youtube.com/watch?v=4t3B_xcU6_I
+
+APK:
+https://drive.google.com/file/d/1vyyM8DmkMB1uuK1LdMBmUST2nh74obJA/view?usp=drive_link
